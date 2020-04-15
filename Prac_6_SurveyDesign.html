@@ -439,7 +439,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Introduction to distance sampling</h1>
-<h3 class="subtitle">Workshop, 17-28 February 2020</h3>
+<h3 class="subtitle">Workshop, 04-15 May 2020</h3>
 <h4 class="author">Centre for Research into Ecological and Environmental Modelling <strong>University of St Andrews</strong></h4>
 <h4 class="date">Practical 6. Distance Sampling Survey Design using R</h4>
 
@@ -448,17 +448,17 @@ summary {
 
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
-<p>We provide two exercises in survey design so you can choose the one you feel is most useful to you. The first example involves designing a line transect survey to estimate the abundance of porpoise, common dolphins and seals in and around St Andrews Bay. It considers how you choose your design based on effort limitations. It also compares an aerial survey based on systematic parallel lines with a boat based survey using zigzags. The second example involves designing a point transect bird survey in Tentsmuir Forest. This looks at how to project your study area from latitude and longitude on to a flat plane using R. It also involves defining a design for multiple strata with different coverage in each strata.</p>
+<p>We provide two exercises in survey design so you can choose the one you feel is most useful to you. The first example involves designing a line transect survey to estimate the abundance of porpoise, common dolphins and seals in and around St Andrews Bay. It considers how you choose your design based on effort limitations. It also compares an aerial survey based on systematic parallel lines with a boat based survey using zigzags. The <a href="#point-transect-bird-survey-in-tentsmuir-forest">second example</a> involves designing a point transect bird survey in Tentsmuir Forest. This looks at how to project your study area from latitude and longitude on to a flat plane using R. It also involves defining a design for multiple strata with different coverage in each strata.</p>
 </div>
 <div id="systematic-parallel-line-aerial-survey-of-marine-mammals-in-st-andrews-bay" class="section level1">
 <h1><span class="header-section-number">2</span> Systematic parallel line aerial survey of marine mammals in St Andrews bay</h1>
 <p><strong>The objective of this exercise is to decide on a systematic line spacing which uses as much of the 250 km of available effort as possible without risking not being able to complete the survey. We must remember that some of the 250 km will be spent travelling off-effort between transects.</strong></p>
-<p>This project involves designing an aerial survey of porpoise, common dolphins and seals in and around St Andrews bay. (For locals: the nearer St Andrews bay region has been extended in an easterly direction out past Bell Rock, as there are some pockets of deeper water out there that are of interest with regard to the distribution of cetaceans. The survey region has a chunk missing due to a no-fly zone around Buddo Ness, just south of Carnoustie).</p>
+<p>This project involves designing an aerial survey of porpoise, common dolphins and seals in and around St Andrews bay. (For locals: the nearer St Andrews bay region has been extended in an easterly direction out past Bell Rock, as there are some pockets of deeper water that are of interest with regard to the distribution of cetaceans. The survey region has a chunk missing due to a no-fly zone around Buddo Ness, just south of Carnoustie).</p>
 <p>Before we begin we must load the distance sampling survey design R library.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(dssd)</span></code></pre></div>
 <div id="study-region" class="section level2">
 <h2><span class="header-section-number">2.1</span> Study Region</h2>
-<p>First of all we will set up the study region and plot it. The shapefile for this study area is contained within the <code>dssd</code> R library. This shapefile has already been projected from latitude and longitude on to a flat plane and its units are in metres. The first line of code below obtains the pathway for the shapefile within the R library and may vary on different computers. You will then pass this shapefile pathway to the <em>make.region</em> function to set up the survey region. As this shapefile does not have a projection (.prj) file associated with it we should tell <code>dssd</code> the units (m) when we create the survey region.</p>
+<p>First of all we will set up the study region and plot it. The shapefile for this study area is contained within the <code>dssd</code> R library. This shapefile has already been projected from latitude and longitude on to a flat plane and its units are in metres. The first line of code below returns the path for the shapefile within the R library and may vary on different computers. You will then pass this shapefile pathway to the <em>make.region</em> function to set up the survey region. As this shapefile does not have a projection (.prj) file associated with it we should tell <code>dssd</code> the units (m) when we create the survey region.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#Find the pathway to the file</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>shapefile.name &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;StAndrew.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;dssd&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="co">#Create the region using this shapefile</span></span>
@@ -622,8 +622,14 @@ Note, you can go back to one of your parallel line designs and plot the coverage
 <span id="cb15-4"><a href="#cb15-4"></a><span class="co"># Check current coordinate reference system</span></span>
 <span id="cb15-5"><a href="#cb15-5"></a><span class="kw">st_crs</span>(sf.shape)</span></code></pre></div>
 <pre><code>## Coordinate Reference System:
-##   EPSG: 4326 
-##   proj4string: &quot;+proj=longlat +datum=WGS84 +no_defs&quot;</code></pre>
+##   User input: 4326 
+##   wkt:
+## GEOGCS[&quot;GCS_WGS_1984&quot;,
+##     DATUM[&quot;WGS_1984&quot;,
+##         SPHEROID[&quot;WGS_84&quot;,6378137,298.257223563]],
+##     PRIMEM[&quot;Greenwich&quot;,0],
+##     UNIT[&quot;Degree&quot;,0.017453292519943295],
+##     AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</code></pre>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Define a European Albers Equal Area projection</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>proj4string &lt;-<span class="st"> &quot;+proj=aea +lat_1=56 +lat_2=62 +lat_0=50 +lon_0=-3 +x_0=0 </span></span>
 <span id="cb17-3"><a href="#cb17-3"></a><span class="st">                +y_0=0 +ellps=intl +units=m&quot;</span></span>

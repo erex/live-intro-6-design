@@ -1,7 +1,7 @@
 ---
 title: Introduction to distance sampling
 author: Centre for Research into Ecological and Environmental Modelling **University of St Andrews**
-subtitle: Workshop, 17-28 February 2020
+subtitle: Workshop, 04-15 May 2020
 date: Practical 6. Distance Sampling Survey Design using R
 output: 
   html_document:
@@ -16,13 +16,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-We provide two exercises in survey design so you can choose the one you feel is most useful to you. The first example involves designing a line transect survey to estimate the abundance of porpoise, common dolphins and seals in and around St Andrews Bay. It considers how you choose your design based on effort limitations. It also compares an aerial survey based on systematic parallel lines with a boat based survey using zigzags. The second example involves designing a point transect bird survey in Tentsmuir Forest. This looks at how to project your study area from latitude and longitude on to a flat plane using R. It also involves defining a design for multiple strata with different coverage in each strata. 
+We provide two exercises in survey design so you can choose the one you feel is most useful to you. The first example involves designing a line transect survey to estimate the abundance of porpoise, common dolphins and seals in and around St Andrews Bay. It considers how you choose your design based on effort limitations. It also compares an aerial survey based on systematic parallel lines with a boat based survey using zigzags. The [second example](#point-transect-bird-survey-in-tentsmuir-forest) involves designing a point transect bird survey in Tentsmuir Forest. This looks at how to project your study area from latitude and longitude on to a flat plane using R. It also involves defining a design for multiple strata with different coverage in each strata. 
 
 # Systematic parallel line aerial survey of marine mammals in St Andrews bay
 
 **The objective of this exercise is to decide on a systematic line spacing which uses as much of the 250 km of available effort as possible without risking not being able to complete the survey. We must remember that some of the 250 km will be spent travelling off-effort between transects.**
 
-This project involves designing an aerial survey of porpoise, common dolphins and seals in and around St Andrews bay. (For locals: the nearer St Andrews bay region has been extended in an easterly direction out past Bell Rock, as there are some pockets of deeper water out there that are of interest with regard to the distribution of cetaceans. The survey region has a chunk missing due to a no-fly zone around Buddo Ness, just south of Carnoustie).
+This project involves designing an aerial survey of porpoise, common dolphins and seals in and around St Andrews bay. (For locals: the nearer St Andrews bay region has been extended in an easterly direction out past Bell Rock, as there are some pockets of deeper water that are of interest with regard to the distribution of cetaceans. The survey region has a chunk missing due to a no-fly zone around Buddo Ness, just south of Carnoustie).
 
 Before we begin we must load the distance sampling survey design R library. 
 
@@ -32,7 +32,7 @@ library(dssd)
 
 ## Study Region
 
-First of all we will set up the study region and plot it. The shapefile for this study area is contained within the `dssd` R library. This shapefile has already been projected from latitude and longitude on to a flat plane and its units are in metres. The first line of code below obtains the pathway for the shapefile within the R library and may vary on different computers. You will then pass this shapefile pathway to the *make.region* function to set up the survey region. As this shapefile does not have a projection (.prj) file associated with it we should tell `dssd` the units (m) when we create the survey region.
+First of all we will set up the study region and plot it. The shapefile for this study area is contained within the `dssd` R library. This shapefile has already been projected from latitude and longitude on to a flat plane and its units are in metres. The first line of code below returns the path for the shapefile within the R library and may vary on different computers. You will then pass this shapefile pathway to the *make.region* function to set up the survey region. As this shapefile does not have a projection (.prj) file associated with it we should tell `dssd` the units (m) when we create the survey region.
 
 ```{r region, fig.align='center', fig.cap="Study Region", fig.width=4, fig.height=4.5}
 #Find the pathway to the file

@@ -1,7 +1,7 @@
 ---
 title: Introduction to distance sampling
 author: Centre for Research into Ecological and Environmental Modelling  **University of St Andrews**
-subtitle: Workshop, 17-28 February 2020
+subtitle: Workshop, 04-15 May 2020
 date: Exercise 6. Survey design (supplement)
 output: 
   html_document:
@@ -35,6 +35,21 @@ m <- m %>%
     primaryAreaUnit = "hectares",
     activeColor = "#3D535D",
     completedColor = "#7D4479")
+```
+
+# Improved map of the St Andrews Bay survey area
+
+This uses the package `leaflet` to create improved figures of survey areas.  Just to give you a better image of the portion of the North Sea where the aerial survey for marine mammals was proposed, here is a quick figure, showing the Kingdom of Fife extending eastward from the coast of Scotland into the North Sea.
+
+```{r standbay, echo=FALSE, fig.height=4, fig.cap="St Andrews Bay lies northeast of St Andrews."}
+sab <- leaflet() %>% addProviderTiles(providers$Esri.OceanBasemap)
+sab <- sab %>% 
+   setView(-2.5, 56.5, zoom=9)
+sab <- addMarkers(sab,
+    lng = -2.7967, lat = 56.3398,
+    label = "St Andrews",
+    labelOptions = labelOptions(noHide = T, textOnly = TRUE))
+sab
 ```
 
 # Tentsmuir survey
