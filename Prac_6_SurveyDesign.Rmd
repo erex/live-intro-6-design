@@ -16,7 +16,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-We provide two exercises in survey design so you can choose the one you feel is most useful to you. The first example involves designing a line transect survey to estimate the abundance of porpoise, common dolphins and seals in and around St Andrews Bay. It considers how you choose your design based on effort limitations. It also compares an aerial survey based on systematic parallel lines with a boat based survey using zigzags. The [second example](#point-transect-bird-survey-in-tentsmuir-forest) involves designing a point transect bird survey in Tentsmuir Forest. This looks at how to project your study area from latitude and longitude on to a flat plane using R. It also involves defining a design for multiple strata with different coverage in each strata. 
+We provide two exercises in survey design so you can choose the one you feel is most useful to you. 
+
+- The first example involves designing a line transect survey to estimate the abundance of porpoise, common dolphins and seals in and around St Andrews Bay. 
+  - It considers how you choose your design based on effort limitations. 
+  - It also compares an aerial survey based on systematic parallel lines with a boat based survey using zigzags. 
+- The [second example](#point-transect-bird-survey-in-tentsmuir-forest) involves designing a point transect bird survey in Tentsmuir Forest. 
+  - This looks at how to project your study area from latitude and longitude on to a flat plane using R. 
+  - It also involves defining a design for multiple strata with different coverage in each strata. 
 
 # Systematic parallel line aerial survey of marine mammals in St Andrews bay
 
