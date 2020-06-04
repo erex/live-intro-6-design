@@ -1,7 +1,7 @@
 ---
 title: Introduction to distance sampling
 author: Centre for Research into Ecological and Environmental Modelling **University of St Andrews**
-subtitle: Workshop, 04-15 May 2020
+subtitle: Workshop, 06-17 July 2020
 date: Practical 6. Distance Sampling Survey Design using R
 output: 
   html_document:
@@ -29,7 +29,26 @@ We provide two exercises in survey design so you can choose the one you feel is 
 
 **The objective of this exercise is to decide on a systematic line spacing which uses as much of the 250 km of available effort as possible without risking not being able to complete the survey. We must remember that some of the 250 km will be spent travelling off-effort between transects.**
 
-This project involves designing an aerial survey of porpoise, common dolphins and seals in and around St Andrews bay. (For locals: the nearer St Andrews bay region has been extended in an easterly direction out past Bell Rock, as there are some pockets of deeper water that are of interest with regard to the distribution of cetaceans. The survey region has a chunk missing due to a no-fly zone around Buddo Ness, just south of Carnoustie).
+This project involves designing an aerial survey of porpoise, common dolphins and seals in and around St Andrews bay. (For locals: the nearer St Andrews bay region has been extended in an easterly direction out past Bell Rock, as there are some pockets of deeper water that are of interest with regard to the distribution of cetaceans. The survey region has a chunk missing due to a no-fly zone around Buddon Ness, just south of Carnoustie because of the Royal Marines base there).
+
+This uses the package `leaflet` to  give you a better image of the portion of the North Sea where the aerial survey for marine mammals was proposed, here is a quick figure, showing the Kingdom of Fife extending eastward from the coast of Scotland into the North Sea.
+
+```{r standbay, echo=FALSE, fig.height=5, fig.width=6, fig.cap="St Andrews Bay lies northeast of St Andrews.", message=FALSE, warning=FALSE}
+library(rgdal)
+library(leaflet)
+starea <- readOGR("nicerarea.shp", layer="nicerarea", 
+               GDAL1_integer64_policy = TRUE, verbose=FALSE)
+
+sab <- leaflet() %>% addProviderTiles(providers$Esri.OceanBasemap)
+sab <- sab %>% 
+  setView(-2.5, 56.41, zoom=10) %>%
+  addPolygons(data=starea)
+sab <- addMarkers(sab,
+                  lng = c(-2.7967, -2.7375, -2.6036), lat = c(56.3398, 56.4661, 56.2697),
+                  label = c("St Andrews", "Buddon Ness", "Fife Ness airstrip"),
+                  labelOptions = labelOptions(noHide = T, textOnly = TRUE))
+sab
+```
 
 Before we begin we must load the distance sampling survey design R library. 
 
@@ -63,7 +82,7 @@ cover <- make.coverage(region, n.grid.points = 500)
 
 ## Systematic Parallel Design
 
-The small survey plane available can complete a total flight time of around 250 km (excluding the flight time to and from the landing strip in Fife Ness). Generally, systematic parallel line designs are preferable for aerial surveys as they allow some rest time for observers as the plane travels between transects and avoids the sharp turns associated with zigzag designs.
+The small survey plane available can complete a total flight time of around 250 km (excluding the flight time to and from the landing strip at Fife Ness). Generally, systematic parallel line designs are preferable for aerial surveys as they allow some rest time for observers as the plane travels between transects and avoids the sharp turns associated with zigzag designs.
 
 Firstly, we will consider the design angle. Often animal density is affected by distance to coast so it is probably wise for this survey to orientate lines approximately perpendicular to the coast. To do this we can select a design angle of 90 degrees. We can therefore expect to spend a little more than 40 km (the height of the survey region) on off-effort transit time and might hope to be able to complete around 200 km of transects. `dssd` lets us specify the desired line length as a design parameter and will then choose an appropriate value for transect spacing. We will choose a minus sampling strategy and set the truncation distance to 2 km. Note that as our survey region coordinates are in metres we also need to supply the design parameters in metres. 
 
@@ -96,7 +115,6 @@ plot(region, survey.LL200)
 
 We can see that the survey consists of parallel systematically spaced transects running horizontally across the survey region roughly perpendicular to the coast as we wanted. We can also view the details of the survey which will tell us what spacing `dssd` used to try and achieve a line length of 200 km.
 
-
 ```{r surveydetails}
 # Display the survey details
 survey.LL200
@@ -108,8 +126,7 @@ To assess the design statistics across many surveys we will now run a coverage s
 
 ```{r runcoverage, eval=FALSE}
 # Run the coverage simulation
-design.LL200 <- run.coverage(design.LL200, 
-                             reps = 100)
+design.LL200 <- run.coverage(design.LL200, reps = 100)
 design.LL200
 ```
 
@@ -127,11 +144,10 @@ design.space500 <- make.design(region = region,
                       edge.protocol = "minus",
                       truncation = 2000,
                       coverage.grid = cover)
-
 ```
 
 
-<ul style="color:blue; font-size:115%">
+<ul style="color:blue; font-size:100%">
 <li>What spacing would you select for this design? 
 <li>What is the maximum trackline length for the design you have selected? 
 <li>What on-effort line length are we likely to achieve?
@@ -161,7 +177,13 @@ plot(region, survey.zz)
 
 Next we will run a coverage simulation to verify that we have stayed within the restraints of our survey effort; a total trackline length of < 250 km. This time when we run the coverage simulation we will ask it to complete more repetitions so we can also assess the coverage. 
 
-First we can output the design statistics. *\textcolor{blue}{Does this design meet our survey effort constraint? What is the maximum total trackline length for this design? What line length are we likely to achieve with this design? Is this higher or lower than the systematic parallel design?}*
+First we can output the design statistics. 
+<ul style="color:blue; font-size:100%">
+<li>Does this design meet our survey effort constraint? 
+<li>What is the maximum total trackline length for this design? 
+<li>What line length are we likely to achieve with this design? 
+<li>Is this higher or lower than the systematic parallel design?
+</ul>
 
 ```{r zzcoverage, eval = FALSE}
 # Run the coverage simulation
@@ -178,11 +200,11 @@ plot(design.zz.4500)
 ```
 
 
-<ul style="color:blue; font-size:115%">
+<ul style="color:blue; font-size:100%">
 <li>Do you think the coverage scores look uniform across the study region? 
 <li>Where are they higher/lower?
 <li>Why do you think this is?
-  <ul style="color:blue; font-size:115%">
+  <ul style="color:blue; font-size:100%">
   <li>Note, you can go back to one of your parallel line designs and plot the coverage scores to compare (although there are fewer repetitions you can still get an idea of coverage).
   </ul>
 </ul>
@@ -245,7 +267,7 @@ cover.tm <- make.coverage(region.tm, n.grid.points = 1000)
 
 You are now going to set up a systematic point transect design. We will assume that we have sufficient resources to survey 40 point transects. As the Morton Lochs stratum is of special interest we will give it higher coverage. We will therefore explicitly allocate 25 samplers to the main stratum and 15 to the Morton Lochs stratum (note that the area of the Morton Lochs stratum is much small than the main stratum). If we wanted to allocate the same effort to both stratum we could provide the samplers argument with the single value of 40 and it would divide the effort equally between the strata. We will leave the design angle as 0 and set the truncation distance to 100 m. We will use a minus sampling approach at the edges.
 
-<ul style="color:blue; font-size:115%">
+<ul style="color:blue; font-size:100%">
   <li>What are the analysis implications of a design with unequal coverage?
 </ul>
 
@@ -259,7 +281,6 @@ design.tm <- make.design(region = region.tm,
                          edge.protocol = "minus",
                          truncation = 100,
                          coverage.grid = cover.tm)
-
 ```
 
 ## Generate a Survey
@@ -275,7 +296,7 @@ plot(region.tm, survey.tm, covered.area = TRUE)
 
 Now look at the survey information. 
 
-<ul style="color:blue; font-size:115%">
+<ul style="color:blue; font-size:100%">
   <li>What spacing was used in each strata to try and achieve the desired number of samplers? 
   <li>Did your survey achieve exactly the number of samplers you requested? 
   <li>How much does coverage differ between the two strata for this realisation?
@@ -286,20 +307,39 @@ Now look at the survey information.
 survey.tm
 ```
 
+### Save coordinates to a file
+
+If this survey is to be conducted in the field, you will want the coordinates that you can load into a handheld GPS.  The function `write.transects()` can write waypoints of the survey (in this case the point transect stations) to text, comma-separated value or GPX files.
+
+```{r, warning=FALSE}
+write.transects(survey.tm,
+                dsn = "tentsmuir-points.gpx",
+                layer = "points",
+                dataset.options = "GPX_USE_EXTENSIONS=yes",
+                proj4string=sf::st_crs(sf.shape))
+```
+
+The GPX file can be transferred to a GPS, or viewed using Google Earth.
+
+```{r, out.width="60%", echo=FALSE, fig.cap="Realised survey with locations written to GPX file and imported into Google Earth."}
+knitr::include_graphics("google-earth.jpg")
+```
+
+
 ## Assessing Coverage and Design Statistics
 
-We will now run a coverage simulation to assess how much the number of sampers and average coverage varies between surveys. We will also be able to assess how coverage varies spatially to see if edge effects are of concern.
+We will now run a coverage simulation to assess how much the number of samplers and average coverage varies between surveys. We will also be able to assess how coverage varies spatially to see if edge effects are of concern.
 
 View the design statistics, then answer these questions. 
-<ul style="color:blue; font-size:115%">
+<ul style="color:blue; font-size:100%">
   <li>What is the minimum number of samplers you will achieve in each strata? 
   <li>Is this sufficient to complete separate analyses in each stratum?
 </ul>
 
 Next plot the coverage scores. 
-<ul style="color:blue; font-size:115%">
+<ul style="color:blue; font-size:100%">
   <li>Does it appear that there is even coverage within each strata?
-  <ul style="color:blue; font-size:115%">
+  <ul style="color:blue; font-size:100%">
     <li>As there is such a difference in the range of coverage scores between strata you may need to plot each strata individually.
   </ul>
 </ul>
