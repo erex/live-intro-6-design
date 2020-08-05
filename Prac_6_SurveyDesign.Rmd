@@ -1,14 +1,10 @@
 ---
 title: Introduction to distance sampling
-author: Centre for Research into Ecological and Environmental Modelling **University of St Andrews**
-subtitle: Workshop, 06-17 July 2020
-date: Practical 6. Distance Sampling Survey Design using R
+author: Centre for Research into Ecological and Environmental Modelling <br> **University of St Andrews**
+date: Practical 6. Distance Sampling Survey Design using R <br> September
 output: 
-  html_document:
-    number_sections: yes
-    theme: flatly
+  rmdformats::readthedown:
     highlight: tango
-    df_print: kable
 ---
 ```{r, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)

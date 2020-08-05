@@ -1,14 +1,10 @@
 ---
 title: Introduction to distance sampling
-author: Centre for Research into Ecological and Environmental Modelling  **University of St Andrews**
-subtitle: Workshop, 06-17 July 2020
-date: Exercise 6. Survey design (supplement)
+author: Centre for Research into Ecological and Environmental Modelling <br> **University of St Andrews**
+date: Exercise 6. Survey design (supplement) <br> September 2020
 output: 
-  html_document:
-    number_sections: no
-    theme: flatly
+  rmdformats::readthedown:
     highlight: tango
-    df_print: kable
 ---
   
 <div class="alert  alert-success">
