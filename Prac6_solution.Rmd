@@ -1,7 +1,7 @@
 ---
 title: Introduction to distance sampling
 author: Centre for Research into Ecological and Environmental Modelling <br> **University of St Andrews**
-date: Exercise 6. Distance sampling survey design <br> September 2020
+date: Exercise 6. Distance sampling survey design <br> November 2020
 output: 
   rmdformats::readthedown:
     highlight: tango
