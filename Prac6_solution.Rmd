@@ -27,7 +27,7 @@ shapefile.name <- system.file("extdata", "StAndrew.shp", package = "dssd")
 region <- make.region(region.name = "St Andrews Bay",
                       units = "m",
                       shape = shapefile.name)
-cover <- make.coverage(region, n.grid.points = 500)
+cover <- make.coverage(region, n.grid.points = 5000)
 ```
 
 ```{r designspacingsol, eval=TRUE}
@@ -42,9 +42,10 @@ design.space500 <- make.design(region = region,
                       coverage.grid = cover)
 ```
 
-```{r designspacingsol2, eval=TRUE, include=FALSE}
+```{r designspacingsol2, eval=TRUE, message=FALSE, fig.cap="Coverage grid plot for parallel design.", fig.width=5, fig.height=5}
 # Run the coverage simulation
-design.space500 <- run.coverage(design.space500, reps = 100)
+design.space500 <- run.coverage(design.space500, reps = 100, quiet=TRUE)
+plot(design.space500)
 ```
 
 ```{r designspacingsol3, eval=TRUE}
@@ -70,9 +71,9 @@ design.zz.4500 <- make.design(region = region,
                       coverage.grid = cover)
 ```
 
-```{r zzcoveragesol, eval = TRUE, include=FALSE, fig.cap="Coverage grid plot for zigzag design.", fig.width=4, fig.height=4.5}
+```{r zzcoveragesol, eval = TRUE,  fig.cap="Coverage grid plot for zigzag design.", fig.width=5, fig.height=5}
 # Run coverage simulation
-design.zz.4500 <- run.coverage(design.zz.4500, reps = 500)
+design.zz.4500 <- run.coverage(design.zz.4500, reps = 100, quiet=TRUE)
 # Plot coverage
 plot(design.zz.4500)
 ```
@@ -112,8 +113,11 @@ region.tm <- make.region(region.name = "Tentsmuir",
 The next step is to set up a coverage grid. A coverage grid is a grid of regularly spaced points and is used to assess whether each point in the survey region is equally likely to sampled. The coverage grid needs to be created before the coverage simulation is run. 
 
 ```{r coveragegridtm}
-# Set up coverage grid
-cover.tm <- make.coverage(region.tm, n.grid.points = 1000)
+# Set up coverage grid, with lots of grid points
+#     This many grid points will slow down execution of this code;
+#     I used this resolution to see fine detail in the plots for demonstration
+#     If you adapt this code for your use, you may wish to initially reduce points
+cover.tm <- make.coverage(region.tm, n.grid.points = 5000)
 design.tm <- make.design(region = region.tm,
                          transect.type = "point",
                          design = "systematic",
@@ -143,8 +147,9 @@ My design statistics indicated I should achieve between 22 and 27 transects in t
 
 *Does it appear that you that there is even coverage within strata?*
 
-```{r fig1, echo=FALSE, fig.cap="The coverage scores for each strata separately for the point transect Tentsmuir Forest survey design.", fig.height = 2, fig.align='center'}
-knitr::include_graphics("https://workshops.distancesampling.org/standrews-2019/intro/practicals/figures/Prac_6_Figure_1.png")
+```{r fig1, echo=FALSE, fig.cap="Coverage scores for each strata for the point transect Tentsmuir Forest survey design.",  fig.align='center'}
+plot(sims.tm, strata.id=1, subtitle="Main area")
+plot(sims.tm, strata.id=2, subtitle="Morton Lochs")
 ```
 
 The main strata looks to have even fairly uniform coverage. The values appear to have such small levels of variability that the variability that is seen will be down to stochasticity as it is seen across the entire strata. The Morton Lochs strata we can see has areas of lower coverage around the edge of the study region. This grid is a bit too coarse to allow us to properly judge how much of an issue edge effects will be in this strata. It may be wise to re-run the coverage simulation with a finer coverage grid and more repetitions too. Edge effects could potentially be problematic in such small areas.
