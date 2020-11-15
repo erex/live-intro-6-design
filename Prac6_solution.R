@@ -1,13 +1,13 @@
-## ----prep, echo=FALSE------------------------------------------------------------------------------
+## ----prep, echo=FALSE-------------------------------------------------------------------------
 library(dssd)
 shapefile.name <- system.file("extdata", "StAndrew.shp", package = "dssd")
 region <- make.region(region.name = "St Andrews Bay",
                       units = "m",
                       shape = shapefile.name)
-cover <- make.coverage(region, n.grid.points = 500)
+cover <- make.coverage(region, n.grid.points = 5000)
 
 
-## ----designspacingsol, eval=TRUE-------------------------------------------------------------------
+## ----designspacingsol, eval=TRUE--------------------------------------------------------------
 # Define the design
 design.space500 <- make.design(region = region,
                       transect.type = "line",
@@ -19,17 +19,18 @@ design.space500 <- make.design(region = region,
                       coverage.grid = cover)
 
 
-## ----designspacingsol2, eval=TRUE, include=FALSE---------------------------------------------------
+## ----designspacingsol2, eval=TRUE, message=FALSE, fig.cap="Coverage grid plot for parallel design.", fig.width=5, fig.height=5----
 # Run the coverage simulation
-design.space500 <- run.coverage(design.space500, reps = 100)
+design.space500 <- run.coverage(design.space500, reps = 100, quiet=TRUE)
+plot(design.space500)
 
 
-## ----designspacingsol3, eval=TRUE------------------------------------------------------------------
+## ----designspacingsol3, eval=TRUE-------------------------------------------------------------
 # Display the design statistics
 design.space500
 
 
-## ----prep2-----------------------------------------------------------------------------------------
+## ----prep2------------------------------------------------------------------------------------
 design.zz.4500 <- make.design(region = region,
                       transect.type = "line",
                       design = "eszigzag",
@@ -41,19 +42,19 @@ design.zz.4500 <- make.design(region = region,
                       coverage.grid = cover)
 
 
-## ----zzcoveragesol, eval = TRUE, include=FALSE, fig.cap="Coverage grid plot for zigzag design.", fig.width=4, fig.height=4.5----
+## ----zzcoveragesol, eval = TRUE,  fig.cap="Coverage grid plot for zigzag design.", fig.width=5, fig.height=5----
 # Run coverage simulation
-design.zz.4500 <- run.coverage(design.zz.4500, reps = 500)
+design.zz.4500 <- run.coverage(design.zz.4500, reps = 100, quiet=TRUE)
 # Plot coverage
 plot(design.zz.4500)
 
 
-## ----zzcoveragesol3, eval = TRUE, echo = FALSE-----------------------------------------------------
+## ----zzcoveragesol3, eval = TRUE, echo = FALSE------------------------------------------------
 # Display design statistics
 design.zz.4500
 
 
-## ----prep3, echo=FALSE, include=FALSE--------------------------------------------------------------
+## ----prep3, echo=FALSE, include=FALSE---------------------------------------------------------
 library(sf)
 shapefile.name <- system.file("extdata", "TentsmuirUnproj.shp", package = "dssd")
 sf.shape <- read_sf(shapefile.name)
@@ -66,9 +67,12 @@ region.tm <- make.region(region.name = "Tentsmuir",
                          shape = projected.shape)
 
 
-## ----coveragegridtm--------------------------------------------------------------------------------
-# Set up coverage grid
-cover.tm <- make.coverage(region.tm, n.grid.points = 1000)
+## ----coveragegridtm---------------------------------------------------------------------------
+# Set up coverage grid, with lots of grid points
+#     This many grid points will slow down execution of this code;
+#     I used this resolution to see fine detail in the plots for demonstration
+#     If you adapt this code for your use, you may wish to initially reduce points
+cover.tm <- make.coverage(region.tm, n.grid.points = 5000)
 design.tm <- make.design(region = region.tm,
                          transect.type = "point",
                          design = "systematic",
@@ -80,15 +84,16 @@ design.tm <- make.design(region = region.tm,
 survey.tm <- generate.transects(design.tm)
 
 
-## ----surveytmsols----------------------------------------------------------------------------------
+## ----surveytmsols-----------------------------------------------------------------------------
 survey.tm
 
 
-## ----designtmsols2---------------------------------------------------------------------------------
+## ----designtmsols2----------------------------------------------------------------------------
 sims.tm <- run.coverage(design.tm, reps=100, quiet=TRUE)
 sims.tm
 
 
-## ----fig1, echo=FALSE, fig.cap="The coverage scores for each strata separately for the point transect Tentsmuir Forest survey design.", fig.height = 2, fig.align='center'----
-knitr::include_graphics("https://workshops.distancesampling.org/standrews-2019/intro/practicals/figures/Prac_6_Figure_1.png")
+## ----fig1, echo=FALSE, fig.cap="Coverage scores for each strata for the point transect Tentsmuir Forest survey design.",  fig.align='center'----
+plot(sims.tm, strata.id=1, subtitle="Main area")
+plot(sims.tm, strata.id=2, subtitle="Morton Lochs")
 
