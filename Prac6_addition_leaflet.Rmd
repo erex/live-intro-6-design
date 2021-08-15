@@ -1,7 +1,7 @@
 ---
 title: Exercise 6<br> Survey design (supplement)
 author: Centre for Research into Ecological and Environmental Modelling <br> **University of St Andrews**
-date: Introduction to distance sampling<br> April 2021
+date: Introduction to distance sampling<br> September 2021
 output: 
   rmdformats::readthedown:
     highlight: tango
@@ -95,7 +95,7 @@ m <- m %>%
     completedColor = "#7D4479")
 ```
 
-In contrast with the Tentsmuir survey, this begins with a projected study area map, with units of measure already in metres.  Each of the six strata are given a different `design.angle` so as to approximate transects roughly perpendicular to the shore.  Design specification is to have 5km spacing between lines within a stratum.  Final line of code in this chunk produces coordinates of transects for a single realisation of this design.
+In contrast with the Tentsmuir survey, this begins with a projected study area map, with units of measure already in metres.  Each of the six strata are given a different `design.angle` so as to approximate transects roughly perpendicular to the shore.  Design specification is to have 15km spacing between lines within a stratum.  Final line of code in this chunk produces coordinates of transects for a single realisation of this design.
 
 ```{r irelanddesign, message=FALSE, warning=FALSE}
 ireland.name <- system.file("extdata", "AreaRProjStrata.shp", package = "dssd")
