@@ -91,12 +91,7 @@ server <- function(input, output) {
     effort <- b/cv^2 * 1/encrate
     return(effort)
   }
-  # rseq <- seq(0.1, 0.9, by=0.05)
-  # cvframe <- data.frame(R=rseq, yr3=rseq, yr5=rseq, yr10=rseq)
-  # cvframe$yr3 <- lin.constn.cv(R=cvframe$R, n=3, power=input$power)
-  # cvframe$yr5 <- lin.constn.cv(R=cvframe$R, n=5, power=input$power)
-  # cvframe$yr10 <- lin.constn.cv(R=cvframe$R, n=10, power=input$power)
-  
+
   returnData <- 
     output$answer <- renderText({
       paste("Given:\n  Cumulative change=", input$R, 
@@ -115,9 +110,9 @@ server <- function(input, output) {
       output$eqn24Plot <- renderPlot({
         cvseq <- seq(0.1, 0.5, by=0.01)
         resulteffort <- eqn2.4(b = 3, encrate = input$encrate, cv=cvseq)
-        plot(cvseq, resulteffort, main=paste("Effort to achieve desired CV\ngiven Encounter rate=", input$encrate),
-             ylab="Effort (km)", xlab="", type="l", lwd=2, 
-             sub="Using Eqn 2.4 of Buckland et al. (2015)\nIndependent of popn change, number of years and power")
+        plot(resulteffort, cvseq, main=paste("Effort to achieve desired CV\ngiven encounter rate=", input$encrate),
+             ylab="Target CV", xlab="Effort (km)", type="l", lwd=2, 
+             sub="Independent of popn change, number of years and power", font.sub=3)
       output$cvPlot <- renderPlot({
         rseq <- seq(0.1, 0.9, by=0.01)
         thecv <- lin.constn.cv(R=rseq, n=input$nyears, power=input$power)        
