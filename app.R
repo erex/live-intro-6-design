@@ -47,7 +47,7 @@ ui <- fluidPage(
           tabsetPanel(id="tabsets", 
             tabPanel("Description",
                      tags$h4("Description"),
-                     tags$p("At the most basic, given an encounter rate from a pilot study, this application can help design a line transect survey.  Using Eqn. 2.4.2.2. of Buckland et al. (2015), the application can estimate the amount of line transect effort needed to estimate precision with a desired level of precision (measured by coefficient of variation."),
+                     tags$p("At the most basic, given an encounter rate from a pilot study, this application can help design a line transect survey.  Using Eqn. 2.4.2.2. of Buckland et al. (2015), the application can estimate the amount of line transect effort needed to estimate precision with a desired level of precision (measured by coefficient of variation)."),
                      tags$p("Subsequent to this calculation, computation of CV needed to achieve desired power based on Eqn. 10 of Gerrodette (1987). That formula assumes"),
                      tags$ul(
                        tags$li("CV is a constant over abundance"),
