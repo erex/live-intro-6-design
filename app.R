@@ -30,13 +30,16 @@ ui <- fluidPage(
                         min = 0.1,
                         max = 2,
                         value = .25),
-            HTML(
-              paste(
-                h5("Other parameters are assumed constant:"), 
-                h6("b -- dispersion factor assumed to be 3"),
-                h6("α -- Type I error rate assumed to be 0.05")
-              )
-            )
+            sliderInput("b",
+                        "Dispersion factor for design:",
+                        min = 1,
+                        max = 20,
+                        value = 3),
+            sliderInput("alpha",
+                        "Type I error rate:",
+                        min = 0.01,
+                        max = .5,
+                        value = .05),
         ),
 
         # Show results in five tabbed panels
@@ -97,57 +100,62 @@ server <- function(input, output) {
       paste("Given:\n  Cumulative change=", input$R, 
             "\n  Years of surveys=", input$nyears,
             "\n  Power=", input$power,
-            "\n  Encounter rate=", input$encrate)
+            "\n  Encounter rate=", input$encrate,
+            "\n  b=", input$b,
+            "\n  alpha=", input$alpha)
                                })
       output$cv <- renderText({ paste("Required CV=", 
                                       round(lin.constn.cv(R=input$R, n=input$nyears,
-                                                 alpha=0.05, power=input$power), 3))
+                                                 alpha=input$alpha, power=input$power), 3))
                                 })
       output$effort <- renderText({paste("Required effort=",
-                                         round(eqn2.4(b=3, encrate=input$encrate,
-                                                cv=lin.constn.cv(R=input$R, n=input$nyears, power=input$power))))
+                                         round(eqn2.4(b=input$b, encrate=input$encrate,
+                                                cv=lin.constn.cv(R=input$R, n=input$nyears, 
+                                                                 alpha=input$alpha, power=input$power))))
                                 })
       output$eqn24Plot <- renderPlot({
         cvseq <- seq(0.1, 0.5, by=0.01)
-        resulteffort <- eqn2.4(b = 3, encrate = input$encrate, cv=cvseq)
+        resulteffort <- eqn2.4(b = input$b, encrate = input$encrate, cv=cvseq)
         plot(resulteffort, cvseq, main=paste("Effort to achieve desired CV\ngiven encounter rate=", input$encrate),
              ylab="Target CV", xlab="Effort (km)", type="l", lwd=2, 
              sub="Independent of popn change, number of years and power", font.sub=3)
       output$cvPlot <- renderPlot({
         rseq <- seq(0.1, 0.9, by=0.01)
-        thecv <- lin.constn.cv(R=rseq, n=input$nyears, power=input$power)        
+        thecv <- lin.constn.cv(R=rseq, n=input$nyears, alpha=input$alpha, power=input$power)        
         plot(rseq, thecv, type="l", lwd=4,
              main=paste("CV with power=", input$power, "Number surveys=", input$nyears),
              xlab="Overall change in abundance",
              ylab="Needed coefficient of variation",
              ylim=c(0, 0.3),
-             sub="Encounter rate plays no role in this calculation"
+             sub="Encounter rate and dispersion factor play no role in this calculation"
         )
-        points(input$R, lin.constn.cv(R=input$R, n=input$nyears, power=input$power), 
+        points(input$R, lin.constn.cv(R=input$R, n=input$nyears, alpha=input$alpha, power=input$power), 
                pch=19, col="red", cex=2)
-        segments(0.0, lin.constn.cv(R=input$R, n=input$nyears, power=input$power),
-                 input$R, lin.constn.cv(R=input$R, n=input$nyears, power=input$power),
+        segments(0.0, lin.constn.cv(R=input$R, n=input$nyears, alpha=input$alpha, power=input$power),
+                 input$R, lin.constn.cv(R=input$R, n=input$nyears, alpha=input$alpha, power=input$power),
                  lty=3)
 
       output$effortPlot <- renderPlot({
         rseq <- seq(0.1, 0.9, by=0.01)
-        effort <- eqn2.4(b=3, encrate=input$encrate,
-                         cv=lin.constn.cv(R=rseq, n=input$nyears, power=input$power))
+        effort <- eqn2.4(b=input$b, encrate=input$encrate,
+                         cv=lin.constn.cv(R=rseq, n=input$nyears, alpha=input$alpha, power=input$power))
         plot(rseq, effort, type="l", lwd=4,
              main=paste("Effort required with power=", input$power, 
                         "Number surveys=", input$nyears,
-                        "Enc rate=", input$encrate),
+                        "Enc rate=", input$encrate,
+                        "\n b=", input$b,
+                        "alpha=", input$alpha),
              xlab="Overall change in abundance",
              ylab="Target effort per survey (km)",
              ylim=c(0, 20000)
         )
         points(input$R, 
-               eqn2.4(b=3, encrate=input$encrate,
+               eqn2.4(b=input$b, encrate=input$encrate,
                       cv=lin.constn.cv(R=input$R, n=input$nyears, power=input$power)), 
                pch=19, col="red", cex=2)
-        segments(0.0, eqn2.4(b=3, encrate=input$encrate,
+        segments(0.0, eqn2.4(b=input$b, encrate=input$encrate,
                              cv=lin.constn.cv(R=input$R, n=input$nyears, power=input$power)), 
-                 input$R, eqn2.4(b=3, encrate=input$encrate,
+                 input$R, eqn2.4(b=input$b, encrate=input$encrate,
                                  cv=lin.constn.cv(R=input$R, n=input$nyears, power=input$power)), 
                  lty=3)
       })
