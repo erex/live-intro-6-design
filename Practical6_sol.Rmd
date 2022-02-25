@@ -1,7 +1,7 @@
 #< ignore
 
 ```{r start}
-setwd("C:/Users/erexs/Documents/RTutor/introwkshp")
+setwd("C:/Users/erexs/Documents/GitHub/live-intro-6-design")
 library(RTutor)
 libs <- c("dssd", "sf")
 create.ps(sol.file="Practical6_sol.Rmd", ps.name="Practical6", libs = libs,
